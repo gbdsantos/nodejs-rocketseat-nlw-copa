@@ -31,7 +31,7 @@
     <a href="#balance_scale-license">License</a>
 </p>
 
-Create pools. Back-end project application made in 10ª edition **Next Level Week**: Copa event by Rocketseat during October of the 2022 (31/10 - 04/11).
+Create pools. Back-end project application made in **10ª edition Next Level Week: Copa** event by Rocketseat during October of the 2022 (31/10 - 04/11).
 
 ## :gear: Getting Start
 
@@ -53,6 +53,9 @@ npx prisma migrate dev
 
 # View database
 npx prisma studio
+
+# To generate ERDs (Entity Relationship Diagrams)
+npx prisma generate    
 ```
 
 <br>
