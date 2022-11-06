@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import ShortUniqueId from "short-unique-id";
-import { z as zod } from "zod";
+import { z, z as zod } from "zod";
 
 import { prisma } from "../lib/prisma";
 import { autheticate } from "../plugins/autentica";
@@ -51,7 +51,7 @@ export async function poolRoutes(fastify: FastifyInstance) {
   });
 
   fastify.post(
-    "/pools/:id/join",
+    "/pools/join",
     {
       onRequest: [autheticate],
     },
@@ -151,6 +151,53 @@ export async function poolRoutes(fastify: FastifyInstance) {
       });
 
       return { pools };
+    }
+  );
+
+  fastify.get(
+    "/pools/:id",
+    {
+      onRequest: [autheticate],
+    },
+    async (request) => {
+      const getPoolParams = zod.object({
+        id: zod.string(),
+      });
+
+      const { id } = getPoolParams.parse(request.params);
+
+      const pool = await prisma.pool.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          _count: {
+            select: {
+              participants: true,
+            },
+          },
+          participants: {
+            select: {
+              id: true,
+
+              user: {
+                select: {
+                  avatarUrl: true,
+                },
+              },
+            },
+            take: 4,
+          },
+          owner: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      return { pool };
     }
   );
 }
